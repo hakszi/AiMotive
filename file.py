@@ -1,8 +1,10 @@
 import pandas as pd
-def main():
-    x = pd.read_json('test_cases_input.json')
-    ls = create_dict(x)
 
+def main():
+    df = pd.read_json('test_cases_input.json')
+    ls = create_dict(df)
+
+    #region success
     print("----------------------------")
     print("--------- SUCCESS ----------")
     print("----------------------------")
@@ -11,27 +13,24 @@ def main():
             print(dict_test(ls[i]))
         except AssertionError as e:
             continue
+    # endregion
 
+    #region error
     print("----------------------------")
     print("---------- ERROR -----------")
     print("----------------------------")
 
+    errors = []
     for i in range(30):
         try:
             dict_test(ls[i])
         except AssertionError as e:
-            print(e)
+            errors.append(str(e))
 
-    '''
-    To do:
-        - report generation (Generate a clear report of passed and failed test cases, including 
-        reasons for failure.)
-        - handling of invalid units (unsupported unit types)
-        - 
-    
-    Error Handling: Uses AssertionError, but lacks structured error categorization (type mismatch, missing data, etc.).
-    
-    '''
+    errors.sort()
+    for error in errors:
+        print(error)
+    #endregion
 
 def dict_test(dict):
     id = dict['case_id']
@@ -165,7 +164,6 @@ def dict_test(dict):
 
 def create_dict(df):
     types = df.type.unique()
-
     list = []
 
     for idx, row in df.iterrows():

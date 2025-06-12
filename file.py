@@ -13,26 +13,25 @@ def dict_test(dict):
 
     #region CASE_ID (extra)
     id = dict['case_id']
-    type = dict['type']
+    dicttype = dict['type']
 
     assert id >= 1 and id <= 30, \
         f"Invalid case_id {id} is not between 1 and 30"
 
-    assert type == 'unit_conversion' or \
-           type == 'required_field' or \
-           type == 'type_check', \
-        f"Invalid type of {type}"
+    assert dicttype == 'unit_conversion' or \
+           dicttype == 'required_field' or \
+           dicttype == 'type_check', \
+        f"Invalid type of {dicttype}"
     #endregion'''
 
     # region UNIT CONVERSION
-    if(dict['type'] == 'unit_conversion'):
+    if(dicttype == 'unit_conversion'):
         lb = 453.59237     # 1 lbs = 453.59237 g
 
         assert dict['data']['value'] is not None, "Value is None."
         assert dict['data']['unit'] is not None, "Unit is None."
         assert dict['config']['expected_unit'] is not None, "Expected unit is None."
         assert dict['config']['min'] is not None, "Expected unit is None."
-
 
 
         value = dict['data']['value']
@@ -87,28 +86,33 @@ def dict_test(dict):
 
     #endregion
 
-    print(dict['config']['expected_type'])
     # region TYPE CHECK
-    '''if(dict['type'] == 'type_check'):
-        if (dict['config']['expected_type'] == 'int'):
-            assert type(dict['data']) is int,\
-            f"{dict['data']} is not {dict['config']['expected_type']} ({type(dict['data'])})"
+    elif(dicttype == 'type_check'):
+        expected_type = dict['config']['expected_type']
+        data = dict['data']
 
-        if (dict['config']['expected_type'] == 'str'):
-            assert type(dict['data']) is str,\
-            f"{dict['data']} is not {dict['config']['expected_type']} ({type(dict['data'])})"
+        if (expected_type == 'int'):
+            assert type(data) is int,\
+            f"{data} is not {expected_type} ({type(data)})"
 
-        if (dict['config']['expected_type'] == 'float'):
-            assert type(dict['data']) is float,\
-            f"{dict['data']} is not {dict['config']['expected_type']} ({type(dict['data'])})"'''
+        if (expected_type == 'str'):
+            assert type(data) is str,\
+            f"{data} is not {expected_type} ({type(data)})"
+
+        if (expected_type == 'float'):
+            assert type(data) is float,\
+            f"{data} is not {expected_type} ({type(data)})"
 
     #endregion
 
     #region REQUIRED FIELD
-    '''if dict['type'] == 'required_field':
-        if (dict['data'] is None):
-            assert type(dict['config']) is not float and dict['config']['allow_null'] == True,\
-            f"Data is {dict['data']}, while config does not exist or allow it."'''
+    elif dicttype == 'required_field':
+        data = dict['data']
+        config = dict['config']
+
+        if (data is None):
+            assert type(config) is not float and dict['config']['allow_null'] == True,\
+            f"Data is {data}, while config does not exist or allow it."
 
     #endregion
 

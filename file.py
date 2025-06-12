@@ -1,10 +1,11 @@
 import pandas as pd
 
+
 def main():
     df = pd.read_json('test_cases_input.json')
     ls = create_dict(df)
 
-    #region success
+    # region success
     print("----------------------------")
     print("--------- SUCCESS ----------")
     print("----------------------------")
@@ -15,7 +16,7 @@ def main():
             continue
     # endregion
 
-    #region error
+    # region error
     print("----------------------------")
     print("---------- ERROR -----------")
     print("----------------------------")
@@ -30,7 +31,8 @@ def main():
     errors.sort()
     for error in errors:
         print(error)
-    #endregion
+    # endregion
+
 
 def dict_test(d):
     id = d['case_id']
@@ -41,126 +43,127 @@ def dict_test(d):
         # 1 lbs = 453.59237 g
         lb = 453.59237
 
-        #region missing data assert
-        assert d['data']['value'] is not None,\
+        # region missing data assert
+        assert d['data']['value'] is not None, \
             f"[MISSING DATA ({id})]: Value is None."
-        assert d['data']['unit'] is not None,\
+        assert d['data']['unit'] is not None, \
             f"[MISSING DATA ({id})]: Unit is None."
-        assert d['config']['expected_unit'] is not None,\
+        assert d['config']['expected_unit'] is not None, \
             f"[MISSING DATA ({id})]: Expected unit is None."
-        assert d['config']['min'] is not None,\
+        assert d['config']['min'] is not None, \
             f"[MISSING DATA ({id})]: Expected unit is None."
-        #endregion
+        # endregion
 
-        #region frequently used data to variables
+        # region frequently used data to variables
         value = d['data']['value']
         unit = d['data']['unit']
         expected_unit = d['config']['expected_unit']
         min = d['config']['min']
-        #endregion
+        # endregion
 
-        #region lb -> lb
+        # region lb -> lb
         if unit == 'lb' and expected_unit == 'lb':
-            assert value > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} lb"
-        #endregion
+            assert value > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} lb"
+        # endregion
 
-        #region kg -> kg
-        if unit == 'kg' and expected_unit== 'kg':
-            assert value > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} kg"
-        #endregion
+        # region kg -> kg
+        if unit == 'kg' and expected_unit == 'kg':
+            assert value > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} kg"
+        # endregion
 
-        #region g -> g
+        # region g -> g
         if unit == 'g' and expected_unit == 'g':
-            assert value > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} g"
-        #endregion
+            assert value > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} g"
+        # endregion
 
-        #region lb -> g
+        # region lb -> g
         if unit == 'lb' and expected_unit == 'g':
-            assert value*lb > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} g"
-        #endregion
+            assert value * lb > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} g"
+        # endregion
 
-        #region lb -> kg
+        # region lb -> kg
         if unit == 'lb' and expected_unit == 'kg':
-            assert value*(lb/1000) > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} kg"
-        #endregion
+            assert value * (lb / 1000) > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} kg"
+        # endregion
 
-        #region g -> lb
+        # region g -> lb
         if unit == 'g' and expected_unit == 'lb':
-            assert value/lb > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} lb"
-        #endregion
+            assert value / lb > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} lb"
+        # endregion
 
-        #region kg -> lb
+        # region kg -> lb
         if unit == 'kg' and expected_unit == 'lb':
-            assert (value/lb)*1000 > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} lb"
-        #endregion
+            assert (value / lb) * 1000 > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} lb"
+        # endregion
 
-        #region kg -> g
+        # region kg -> g
         if unit == 'kg' and expected_unit == 'g':
-            assert value*1000 > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} g"
-        #endregion
+            assert value * 1000 > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} g"
+        # endregion
 
-        #region g -> kg
+        # region g -> kg
         if unit == 'g' and expected_unit == 'kg':
-            assert value/1000 > min,\
-            f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} kg"
-        #endregion
+            assert value / 1000 > min, \
+                f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} kg"
+        # endregion
 
         return f"[SUCCESS ({id})]: Unit conversion check"
 
-    #endregion
+    # endregion
 
     # region TYPE CHECK
     elif dict_type == 'type_check':
-        #region frequently used data to variables
+        # region frequently used data to variables
         expected_type = d['config']['expected_type']
         data = d['data']
-        #endregion
+        # endregion
 
-        #region int
+        # region int
         if expected_type == 'int':
-            assert type(data) is int,\
-            f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
-        #endregion
+            assert type(data) is int, \
+                f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
+        # endregion
 
-        #region string
+        # region string
         if expected_type == 'str':
-            assert type(data) is str,\
-            f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
-        #endregion
+            assert type(data) is str, \
+                f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
+        # endregion
 
-        #region float
+        # region float
         if expected_type == 'float':
-            assert type(data) is float,\
-            f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
-        #endregion
+            assert type(data) is float, \
+                f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
+        # endregion
         return f"[SUCCESS ({id})]: Type check"
 
-    #endregion
+    # endregion
 
-    #region REQUIRED FIELD
+    # region REQUIRED FIELD
     elif dict_type == 'required_field':
-        #region frequently used data to variables
+        # region frequently used data to variables
         data = d['data']
         config = d['config']
-        #endregion
+        # endregion
 
-        #region assert
+        # region assert
         if data is None:
             assert type(config) is not float and d['config']['allow_null'] == True, \
                 f"[CONFIGURATION ERROR ({id})]: Not allowed None"
-        #endregion
+        # endregion
         return f"[SUCCESS ({id})]: Required field check"
 
-    #endregion
+    # endregion
     return "Unknown ending"
+
 
 def create_dict(df):
     types = df.type.unique()
@@ -195,5 +198,6 @@ def create_dict(df):
             list.append(d)
 
     return list
+
 
 main()

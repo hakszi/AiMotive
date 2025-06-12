@@ -32,83 +32,83 @@ def main():
         print(error)
     #endregion
 
-def dict_test(dict):
-    id = dict['case_id']
-    dict_type = dict['type']
+def dict_test(d):
+    id = d['case_id']
+    dict_type = d['type']
 
     # region UNIT CONVERSION
-    if(dict_type == 'unit_conversion'):
+    if dict_type == 'unit_conversion':
         # 1 lbs = 453.59237 g
         lb = 453.59237
 
         #region missing data assert
-        assert dict['data']['value'] is not None,\
+        assert d['data']['value'] is not None,\
             f"[MISSING DATA ({id})]: Value is None."
-        assert dict['data']['unit'] is not None,\
+        assert d['data']['unit'] is not None,\
             f"[MISSING DATA ({id})]: Unit is None."
-        assert dict['config']['expected_unit'] is not None,\
+        assert d['config']['expected_unit'] is not None,\
             f"[MISSING DATA ({id})]: Expected unit is None."
-        assert dict['config']['min'] is not None,\
+        assert d['config']['min'] is not None,\
             f"[MISSING DATA ({id})]: Expected unit is None."
         #endregion
 
         #region frequently used data to variables
-        value = dict['data']['value']
-        unit = dict['data']['unit']
-        expected_unit = dict['config']['expected_unit']
-        min = dict['config']['min']
+        value = d['data']['value']
+        unit = d['data']['unit']
+        expected_unit = d['config']['expected_unit']
+        min = d['config']['min']
         #endregion
 
         #region lb -> lb
-        if(unit == 'lb' and expected_unit == 'lb'):
+        if unit == 'lb' and expected_unit == 'lb':
             assert value > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} lb"
         #endregion
 
         #region kg -> kg
-        if(unit == 'kg' and expected_unit== 'kg'):
+        if unit == 'kg' and expected_unit== 'kg':
             assert value > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} kg"
         #endregion
 
         #region g -> g
-        if(unit == 'g' and expected_unit == 'g'):
+        if unit == 'g' and expected_unit == 'g':
             assert value > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} g"
         #endregion
 
         #region lb -> g
-        if(unit == 'lb' and expected_unit == 'g'):
+        if unit == 'lb' and expected_unit == 'g':
             assert value*lb > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} g"
         #endregion
 
         #region lb -> kg
-        if(unit == 'lb' and expected_unit == 'kg'):
+        if unit == 'lb' and expected_unit == 'kg':
             assert value*(lb/1000) > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} lb is not bigger than {min} kg"
         #endregion
 
         #region g -> lb
-        if(unit == 'g' and expected_unit == 'lb'):
+        if unit == 'g' and expected_unit == 'lb':
             assert value/lb > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} lb"
         #endregion
 
         #region kg -> lb
-        if(unit == 'kg' and expected_unit == 'lb'):
+        if unit == 'kg' and expected_unit == 'lb':
             assert (value/lb)*1000 > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} lb"
         #endregion
 
         #region kg -> g
-        if(unit == 'kg' and expected_unit == 'g'):
+        if unit == 'kg' and expected_unit == 'g':
             assert value*1000 > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} kg is not bigger than {min} g"
         #endregion
 
         #region g -> kg
-        if(unit == 'g' and expected_unit == 'kg'):
+        if unit == 'g' and expected_unit == 'kg':
             assert value/1000 > min,\
             f"[CONFIGURATION ERROR ({id})]: {value} g is not bigger than {min} kg"
         #endregion
@@ -118,26 +118,26 @@ def dict_test(dict):
     #endregion
 
     # region TYPE CHECK
-    elif(dict_type == 'type_check'):
+    elif dict_type == 'type_check':
         #region frequently used data to variables
-        expected_type = dict['config']['expected_type']
-        data = dict['data']
+        expected_type = d['config']['expected_type']
+        data = d['data']
         #endregion
 
         #region int
-        if (expected_type == 'int'):
+        if expected_type == 'int':
             assert type(data) is int,\
             f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
         #endregion
 
         #region string
-        if (expected_type == 'str'):
+        if expected_type == 'str':
             assert type(data) is str,\
             f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
         #endregion
 
         #region float
-        if (expected_type == 'float'):
+        if expected_type == 'float':
             assert type(data) is float,\
             f"[TYPE MISMATCH ({id})]: {data} is not {expected_type} ({type(data)})"
         #endregion
@@ -148,14 +148,14 @@ def dict_test(dict):
     #region REQUIRED FIELD
     elif dict_type == 'required_field':
         #region frequently used data to variables
-        data = dict['data']
-        config = dict['config']
+        data = d['data']
+        config = d['config']
         #endregion
 
         #region assert
-        if (data is None):
-            assert type(config) is not float and dict['config']['allow_null'] == True,\
-            (f"[CONFIGURATION ERROR ({id})]: Not allowed None")
+        if data is None:
+            assert type(config) is not float and d['config']['allow_null'] == True, \
+                f"[CONFIGURATION ERROR ({id})]: Not allowed None"
         #endregion
         return f"[SUCCESS ({id})]: Required field check"
 
@@ -168,31 +168,31 @@ def create_dict(df):
 
     for idx, row in df.iterrows():
         if row.iloc[1] == types[0]:
-            dict = {
+            d = {
                 "case_id": row.iloc[0],
                 "type": row.iloc[1],
                 "data": row.iloc[2],
                 "config": row.iloc[3],
             }
-            list.append(dict)
+            list.append(d)
 
         elif row.iloc[1] == types[1]:
-            dict = {
+            d = {
                 "case_id": row.iloc[0],
                 "type": row.iloc[1],
                 "data": row.iloc[2],
                 "config": row.iloc[3],
             }
-            list.append(dict)
+            list.append(d)
 
         elif row.iloc[1] == types[2]:
-            dict = {
+            d = {
                 "case_id": row.iloc[0],
                 "type": row.iloc[1],
                 "data": row.iloc[2],
                 "config": row.iloc[3],
             }
-            list.append(dict)
+            list.append(d)
 
     return list
 

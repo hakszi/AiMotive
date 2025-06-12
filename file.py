@@ -9,23 +9,36 @@ def main():
         except AssertionError as e:
             print(f"Dict{ls[i]['case_id']}: {e}")
 
+    '''
+    To do:
+        -structured error categorization
+            - classify errors (e.g., type mismatch, missing data, configuration errors)
+        - report generation (Generate a clear report of passed and failed test cases, including 
+        reasons for failure.)
+        - handling of invalid units (unsupported unit types)
+        - 
+    
+    Error Handling: Uses AssertionError, but lacks structured error categorization (type mismatch, missing data, etc.).
+    
+    '''
+
 def dict_test(dict):
 
     #region CASE_ID (extra)
     id = dict['case_id']
-    dicttype = dict['type']
+    dict_type = dict['type']
 
     assert id >= 1 and id <= 30, \
         f"Invalid case_id {id} is not between 1 and 30"
 
-    assert dicttype == 'unit_conversion' or \
-           dicttype == 'required_field' or \
-           dicttype == 'type_check', \
-        f"Invalid type of {dicttype}"
-    #endregion'''
+    assert dict_type == 'unit_conversion' or \
+           dict_type == 'required_field' or \
+           dict_type == 'type_check', \
+        f"Invalid type of {dict_type}"
+    #endregion
 
     # region UNIT CONVERSION
-    if(dicttype == 'unit_conversion'):
+    if(dict_type == 'unit_conversion'):
         lb = 453.59237     # 1 lbs = 453.59237 g
 
         assert dict['data']['value'] is not None, "Value is None."
@@ -87,7 +100,7 @@ def dict_test(dict):
     #endregion
 
     # region TYPE CHECK
-    elif(dicttype == 'type_check'):
+    elif(dict_type == 'type_check'):
         expected_type = dict['config']['expected_type']
         data = dict['data']
 
@@ -106,7 +119,7 @@ def dict_test(dict):
     #endregion
 
     #region REQUIRED FIELD
-    elif dicttype == 'required_field':
+    elif dict_type == 'required_field':
         data = dict['data']
         config = dict['config']
 
